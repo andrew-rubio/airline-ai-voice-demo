@@ -1,0 +1,40 @@
+name: voice-live-agent
+metadata:
+  template: voice-live-agent@0.1.0
+requiredVersions:
+  azd: ">=1.14.0"
+services:
+    app:
+        project: server
+        host: containerapp
+        language: python
+        docker:
+          path: Dockerfile
+          remoteBuild: true
+hooks:
+  postprovision:
+    windows:
+      shell: pwsh
+      run: |
+        Write-Host "`n=== NEXT STEP ==="
+        Write-Host "Infrastructure provisioned successfully!"
+        Write-Host "`nTo create the Foundry agent, run:"
+        Write-Host "  python agent/create_agent.py"
+        Write-Host "`nMake sure you have the required packages installed:"
+        Write-Host "  python -m pip install azure-ai-projects azure-identity azure-ai-voicelive`n"
+    posix:
+      shell: sh
+      run: |
+        echo "\n=== NEXT STEP ==="
+        echo "Infrastructure provisioned successfully!"
+        echo "\nTo create the Foundry agent, run:"
+        echo "  python agent/create_agent.py"
+        echo "\nMake sure you have the required packages installed:"
+        echo "  python -m pip install azure-ai-projects azure-identity azure-ai-voicelive\n"
+pipeline:
+  variables:
+    - AZURE_LOCATION
+    - AZURE_RESOURCE_GROUP
+    - AZURE_CONTAINER_REGISTRY_ENDPOINT
+    - SERVICE_API_ENDPOINTS
+    - AZURE_VOICE_LIVE_ENDPOINT
